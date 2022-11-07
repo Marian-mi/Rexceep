@@ -1,9 +1,11 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include "fl_tree.h"
 
-
+void ls_parse_rule(fl_tree* tree, char* rule);
+void ls_parse_prod(fl_tree* tree, char lhs, char* prod);
 
 fl_tree* fl_instance() {
 	fl_tree* self = (fl_tree*)malloc(sizeof(fl_tree*));
@@ -12,10 +14,19 @@ fl_tree* fl_instance() {
 		return NULL;
 
 	self->node_ref_table = ht_instance();
+	self->last_table = ht_instance();
 	self->root = fl_create_node(self, "S");
 
 	return self;
 }
+
+typedef struct ls_node_ ls_node;
+
+struct ls_node_
+{
+	List* terminal;
+	List* non_terminals;
+};
 
 void create_fl_tree(fl_tree* tree, char** rules) {
 	char* rule;
@@ -37,6 +48,59 @@ void get_first_set(fl_tree* tree, char* symbol, List* set) {
 		else
 			get_first_set(tree, &first_child->symbol, set);
 	}
+}
+
+hash_table* ls_get(fl_tree* tree, char** rules) {
+	char* rule;
+
+	while (rule = *rules++) {
+		if (!(*rule)) break;
+		ls_parse_rule(tree, rule);
+	}
+}
+
+void ls_parse_rule(fl_tree* tree, char* rule) {
+	char lhs = *rule;
+	rule += 2;
+	ls_parse_prod(tree, lhs, rule);
+}
+
+void ls_parse_prod(fl_tree* tree, char lhs, char* prod) {
+	char symbol;
+
+	if (strlen(prod) == 1) {
+		if (is_terminal(*prod))
+			return;
+		else {
+			ls_node* node = ls_get_or_create_node(tree->last_table, prod);
+			list_add(node->terminal, &symbol);
+		}
+	}
+
+	char non_terminal = (char)0;
+	while (symbol = *prod++)
+	{
+		if (is_terminal(symbol) && non_terminal) {
+			 
+		}
+	}
+}
+
+ls_node* ls_get_or_create_node(hash_table* tbl, char* symbol) {
+	ls_node* node = tbl->get(tbl, str_first(symbol));
+
+	if (node) return node;
+
+	node = malloc(sizeof(ls_node*));
+
+	if (node == NULL) return NULL;
+
+	node->terminal = list_instance();
+	node->non_terminals = list_instance();
+
+	tbl->add(tbl, symbol, node);
+
+	return node;
 }
 
 fl_node* fl_create_node(fl_tree* tree, char* symbol) {

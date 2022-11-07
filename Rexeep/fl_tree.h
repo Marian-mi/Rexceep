@@ -8,6 +8,7 @@ typedef struct fl_node_ fl_node;
 struct fl_tree_ {
 	fl_node* root;
 	hash_table* node_ref_table;
+	hash_table* last_table;
 };
 
 struct fl_node_ {
