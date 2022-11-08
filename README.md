@@ -9,7 +9,7 @@ The engine itself consists of few main parts and it's written entirely in C
 Why C?
 I tought using a procedural language would be more sensual for creating the engine  
 It was also a good training ground for me before free falling into the assmebly language  
-I just love using simple things to create more complicated matters and having full control of the tool I'm using and C was the barest I could get
+I just love using simple things to create more complicated matters and having full control over the tool I'm using hence I picked C, guess it's the barest I could get  
 
 ### Parser:
 Responsible for parsing the regular exporession and creating a AST  
