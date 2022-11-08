@@ -7,7 +7,7 @@ This project is wholly being operated for educational puporses since I found com
 The engine itself consists of few main parts and it's written entirely in C
 
 Why C?
-I tought using a procedural language would be more sensual for creating the engine  
+I tought using a procedural language would be more reasonable for creating the engine  
 It was also a good training ground for me before free falling into the assmebly language  
 I just love using simple things to create more complicated matters and having full control over the tool I'm using hence I picked C, guess it's the barest I could get  
 
