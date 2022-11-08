@@ -5,10 +5,12 @@
     <ClCompile Include="fl_tree.c" />
     <ClCompile Include="hash_table.c" />
     <ClCompile Include="util.c" />
+    <ClCompile Include="Stack.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="fl_tree.h" />
     <ClInclude Include="util.h" />
     <ClInclude Include="hash_table.h" />
+    <ClInclude Include="Stack.h" />
   </ItemGroup>
 </Project>

@@ -143,11 +143,13 @@
     <ClCompile Include="fl_tree.c" />
     <ClCompile Include="hash_table.c" />
     <ClCompile Include="main.c" />
+    <ClCompile Include="Stack.c" />
     <ClCompile Include="util.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="fl_tree.h" />
     <ClInclude Include="hash_table.h" />
+    <ClInclude Include="Stack.h" />
     <ClInclude Include="util.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

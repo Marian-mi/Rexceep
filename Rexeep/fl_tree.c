@@ -24,7 +24,7 @@ typedef struct ls_node_ ls_node;
 
 struct ls_node_
 {
-	List* terminal;
+	List* terminals;
 	List* non_terminals;
 };
 
@@ -67,14 +67,16 @@ void ls_parse_rule(fl_tree* tree, char* rule) {
 
 void ls_parse_prod(fl_tree* tree, char lhs, char* prod) {
 	char symbol;
+	ls_node* node = ls_get_or_create_node(tree->last_table, prod);
+
+	if (lhs == 'S')
+		list_add(node->terminals, '$');
 
 	if (strlen(prod) == 1) {
-		if (is_terminal(*prod))
-			return;
-		else {
-			ls_node* node = ls_get_or_create_node(tree->last_table, prod);
-			list_add(node->terminal, &symbol);
-		}
+		if (!is_terminal(*prod))
+			list_add(node->non_terminals, &symbol);
+
+		return;
 	}
 
 	char non_terminal = (char)0;
@@ -95,7 +97,7 @@ ls_node* ls_get_or_create_node(hash_table* tbl, char* symbol) {
 
 	if (node == NULL) return NULL;
 
-	node->terminal = list_instance();
+	node->terminals = list_instance();
 	node->non_terminals = list_instance();
 
 	tbl->add(tbl, symbol, node);
