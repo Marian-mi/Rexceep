@@ -4,8 +4,9 @@
 #include "util.h"
 #include "fl_tree.h"
 
-int main() {
-	char* s = "ddwdwddd";
+#include "Stack.h"
 
-	printf("%d", strlen(s));
+int main() {
+
+	//printf("test");
 }

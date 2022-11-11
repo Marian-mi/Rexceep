@@ -4,7 +4,10 @@
 
 #include "fl_tree.h"
 
+typedef struct ls_node_ ls_node;
+
 void ls_parse_rule(fl_tree* tree, char* rule);
+ls_node* ls_get_or_create_node(hash_table* tbl, char* symbol);
 void ls_parse_prod(fl_tree* tree, char lhs, char* prod);
 
 fl_tree* fl_instance() {
@@ -20,7 +23,6 @@ fl_tree* fl_instance() {
 	return self;
 }
 
-typedef struct ls_node_ ls_node;
 
 struct ls_node_
 {
@@ -79,7 +81,7 @@ void ls_parse_prod(fl_tree* tree, char lhs, char* prod) {
 		return;
 	}
 
-	char non_terminal = (char)0;
+
 	while (symbol = *prod++)
 	{
 		if (is_terminal(symbol) && non_terminal) {
