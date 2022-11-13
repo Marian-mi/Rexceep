@@ -3,6 +3,7 @@
 
 typedef struct fl_tree_ fl_tree;
 typedef struct fl_node_ fl_node;
+typedef struct ls_node_ ls_node;
 //cfgTree cfgCreateTree(fl_node* root);
 
 struct fl_tree_ {
@@ -18,6 +19,12 @@ struct fl_node_ {
 	int is_terminal;
 };
 
+struct ls_node_
+{
+	List* terminals;
+	List* non_terminals;
+};
+
 fl_node** fl_search_tree(char* symbol);
 fl_node* fl_create_node(fl_tree* tree, char* symbol);
 fl_node* fl_get_or_create_node(fl_tree* tree, char* sybmbol);
@@ -30,3 +37,5 @@ void parse_rule(fl_tree* tree, char* rule);
 int is_terminal(char code);
 
 void get_first_set(fl_tree* tree, char* symbol, List* set);
+
+void ls_compute(fl_tree* tree, char** rules);
