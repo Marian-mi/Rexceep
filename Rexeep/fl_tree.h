@@ -17,6 +17,7 @@ struct fl_node_ {
 	List* children;
 	int children_count;
 	int is_terminal;
+	int is_nullable;
 };
 
 struct ls_node_

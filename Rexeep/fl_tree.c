@@ -41,16 +41,20 @@ void get_first_set(fl_tree* tree, char* symbol, List* set) {
 
 	for (size_t i = 0; i < node->children_count; i++)
 	{
-		int* hasHash;
-		*hasHash = 0;
+		fl_node* child = NULL;
+		int nc_ind = 0;
+		List* ncl_children = ((List*)node->children->tape[i]);
 
-		fl_node* first_child = (fl_node*)((List*)node->children->tape[i])->tape[0];
-		if (first_child->is_terminal == 1)
-			list_add_unique(set, str_first(&first_child->symbol));
-		else {
+		do {
+			child = (fl_node*)(ncl_children->tape[nc_ind]);
 
-			get_first_set(tree, &first_child->symbol, set);
-		}
+			if (child->is_terminal == 1)
+				list_add_unique(set, str_first(&child->symbol));
+			else 
+				get_first_set(tree, &child->symbol, set);
+
+			nc_ind++;
+		} while (nc_ind < ncl_children->count && child->is_nullable);
 	}
 }
 
@@ -109,6 +113,8 @@ void ls_parse_prod(fl_tree* tree, char lhs, char* prod) {
 
 	while (symbol = *prod++)
 	{
+		if (symbol == '|') goto _recurse;
+
 		if (ntl_ind == 0 && is_terminal(symbol))
 			continue;
 
@@ -133,6 +139,9 @@ void ls_parse_prod(fl_tree* tree, char lhs, char* prod) {
 		if (!is_terminal(symbol))
 			non_terminals[ntl_ind++] = symbol;
 	}
+
+_recurse:
+	ls_parse_prod(tree, lhs, prod);
 
 	free(non_terminals);
 }
@@ -186,6 +195,8 @@ void parse_rule(fl_tree* tree, char* rule) {
 	List* children = list_instance();
 	List* child_block = list_instance();
 
+	int is_nullable = 0;
+
 	while (code = rule++)
 	{
 		if (!(*code)) break;
@@ -193,8 +204,11 @@ void parse_rule(fl_tree* tree, char* rule) {
 			list_add(children, child_block);
 			child_block = list_instance();
 		}
-		else if (is_terminal(*code))
+		else if (is_terminal(*code)) {
 			list_add(child_block, fl_create_node(NULL, str_first(code)));
+			if (*code == '#')
+				is_nullable = 1;
+		}
 		else
 			list_add(child_block, fl_get_or_create_node(tree, str_first(code)));
 	}
@@ -202,6 +216,7 @@ void parse_rule(fl_tree* tree, char* rule) {
 	list_add(children, child_block);
 	fl_get_or_create_node(tree, symbol)->children = children;
 	fl_get_or_create_node(tree, symbol)->children_count = children->count;
+	fl_get_or_create_node(tree, symbol)->is_nullable = is_nullable;
 }
 
 int is_terminal(char code) {

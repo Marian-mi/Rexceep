@@ -13,7 +13,7 @@ int main() {
 	create_fl_tree(tree, rules);
 	ls_compute(tree, rules);
 
-	ls_node* noode = tree->last_table->get(tree->last_table, "B");
+	ls_node* noode = tree->last_table->get(tree->last_table, "C");
 
 	for (size_t i = 0; i < noode->terminals->count; i++)
 	{
