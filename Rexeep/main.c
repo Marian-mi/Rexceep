@@ -7,13 +7,13 @@
 #include "Stack.h"
 
 int main() {
-	char* rules[7] = { "S=aBDh", "B=cC", "C=bC|#", "D=EF", "E=g|#", "F=f|#" };
+	char* rules[5] = { "S=ACB|Cbb|Ba", "B=da|BC", "C=g|#", "D=h|#" };
 
 	fl_tree* tree = fl_instance();
 	create_fl_tree(tree, rules);
 	ls_compute(tree, rules);
 
-	ls_node* noode = tree->last_table->get(tree->last_table, "C");
+	ls_node* noode = tree->last_table->get(tree->last_table, "B");
 
 	for (size_t i = 0; i < noode->terminals->count; i++)
 	{

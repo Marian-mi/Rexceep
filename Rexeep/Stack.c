@@ -39,6 +39,17 @@ char* ss_peek(string_stack* self)
     return (char*)list_get(self->list, self->front - 1);
 }
 
+int ss_is_empty(string_stack* self) {
+    if (self->front == self->rear) return 1;
+    return 0;
+}
+
+void ss_clear(string_stack* self) {
+    self->rear = self->front;
+}
+
 void ss_dispose(string_stack* self)
 {
+    free(self->list);
+    free(self);
 }

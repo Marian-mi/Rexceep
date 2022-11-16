@@ -3,6 +3,7 @@
 #include <string.h>
 
 #include "fl_tree.h"
+#include "Stack.h"
 
 
 void ls_parse_rule(fl_tree* tree, char* rule);
@@ -50,11 +51,11 @@ void get_first_set(fl_tree* tree, char* symbol, List* set) {
 
 			if (child->is_terminal == 1)
 				list_add_unique(set, str_first(&child->symbol));
-			else 
+			else
 				get_first_set(tree, &child->symbol, set);
 
 			nc_ind++;
-		} while (nc_ind < ncl_children->count && child->is_nullable);
+		} while (nc_ind < ncl_children->count&& child->is_nullable);
 	}
 }
 
@@ -70,9 +71,9 @@ void ls_compute(fl_tree* tree, char** rules) {
 		ls_parse_rule(tree, rule, symbols);
 	}
 
-	for (size_t i = symbols->count; i > 0; i--)
+	for (size_t i = symbols->count - 1; i > 0; i--)
 	{
-		ls_node* node = ls_get_or_create_node(tree->last_table, symbols->tape + i);
+		ls_node* node = ls_get_or_create_node(tree->last_table, (char*)symbols->tape[i]);
 
 		for (size_t ntl_ind = 0; ntl_ind < node->non_terminals->count; ntl_ind++)
 		{
@@ -106,44 +107,72 @@ void ls_parse_prod(fl_tree* tree, char lhs, char* prod) {
 	}
 
 	char symbol;
-	char* non_terminals = calloc(strlen(prod), sizeof(char));
-	if (non_terminals == NULL) return;
-
-	int ntl_ind = 0;
+	string_stack* nt_stack = ss_instance();
 
 	while (symbol = *prod++)
 	{
-		if (symbol == '|') goto _recurse;
+		if (symbol == '|')
+			break;
 
-		if (ntl_ind == 0 && is_terminal(symbol))
+		if (is_terminal(symbol) && ss_is_empty(nt_stack) || symbol == '#')
 			continue;
 
-		if (ntl_ind > 0) {
-			for (int i = 0; i <= ntl_ind; i++) {
-				ls_node* node = ls_get_or_create_node(tree->last_table, non_terminals + i);
-				List* first_set = list_instance();
-				get_first_set(tree, &symbol, first_set);
-
-				for (size_t fs_ind = 0; fs_ind < first_set->count; fs_ind++)
-				{
-					char* fs_symbol = (char*)list_get(first_set, fs_ind);
-
-					if (*fs_symbol != '#')
-						list_add_unique(node->terminals, fs_symbol);
-					else
-						list_add_unique(node->non_terminals, &lhs);
-				}
-			}
+		if (!is_terminal(symbol) && ss_is_empty(nt_stack)) {
+			ss_push(nt_stack, str_first(&symbol));
+			continue;
 		}
 
-		if (!is_terminal(symbol))
-			non_terminals[ntl_ind++] = symbol;
+		if (is_terminal(symbol)) {
+			for (size_t i = nt_stack->rear; i < nt_stack->front; i++)
+			{
+				ls_node* node = ls_get_or_create_node(tree->last_table, (char*)nt_stack->list->tape[i]);
+				list_add(node->terminals, str_first(&symbol));
+			}
+
+			ss_clear(nt_stack);
+			continue;
+		}
+
+		{
+			fl_node* node = fl_get_or_create_node(tree, str_first(&symbol));
+			List* first_list = list_instance();
+			get_first_set(tree, str_first(&symbol), first_list);
+
+			for (size_t i = nt_stack->rear; i < nt_stack->front; i++)
+			{
+				ls_node* node = ls_get_or_create_node(tree->last_table, (char*)nt_stack->list->tape[i]);
+
+				for (size_t j = 0; j < first_list->count; j++)
+				{
+					if (*(char*)first_list->tape[j] == '#') continue;
+					list_add(node->terminals, first_list->tape[j]);
+				}
+			}
+
+			if (!node->is_nullable)
+				ss_clear(nt_stack);
+
+			ss_push(nt_stack, str_first(&symbol));
+
+			free(first_list);
+		}
 	}
 
-_recurse:
-	ls_parse_prod(tree, lhs, prod);
 
-	free(non_terminals);
+
+	if (!ss_is_empty(nt_stack)) {
+
+		for (size_t i = nt_stack->rear; i < nt_stack->front; i++)
+		{
+			char* last_symbol = (char*)nt_stack->list->tape[i];
+			ls_node* node = ls_get_or_create_node(tree->last_table, (char*)nt_stack->list->tape[i]);
+
+			list_add(node->non_terminals, str_first(&lhs));
+		}
+	}
+//
+//_recurse:
+//	ls_parse_prod(tree, lhs, prod);
 }
 
 ls_node* ls_get_or_create_node(hash_table* tbl, char* symbol) {
@@ -155,6 +184,7 @@ ls_node* ls_get_or_create_node(hash_table* tbl, char* symbol) {
 
 	if (node == NULL) return NULL;
 
+	node->symbol = *str_first(symbol);
 	node->terminals = list_instance();
 	node->non_terminals = list_instance();
 

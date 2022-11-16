@@ -21,8 +21,6 @@ static void* get_or_add(hash_table* tbl, unsigned char* name, void* val) {
 }
 
 static void dispose(hash_table* self) {
-	void* item;
-
 	free(self->tape);
 	free(self);
 }

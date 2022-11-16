@@ -22,6 +22,7 @@ struct fl_node_ {
 
 struct ls_node_
 {
+	char symbol;
 	List* terminals;
 	List* non_terminals;
 };
