@@ -15,11 +15,11 @@ int main() {
 	create_fl_tree(tree, rules);
 	ls_compute(tree, rules);
 
-	ls_node* noode = tree->last_table->get(tree->last_table, "Z");
+	ls_node* noode = tree->last_table->get(tree->last_table, "X");
 
 	if (LOGF) {
 		List* fss = list_instance();
-		get_first_set(tree, "D", fss);
+		get_first_set(tree, "X", fss);
 
 		for (size_t i = 0; i < fss->count; i++)
 		{
