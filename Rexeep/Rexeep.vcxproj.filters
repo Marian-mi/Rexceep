@@ -6,11 +6,13 @@
     <ClCompile Include="hash_table.c" />
     <ClCompile Include="util.c" />
     <ClCompile Include="Stack.c" />
+    <ClCompile Include="parse_table.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="fl_tree.h" />
     <ClInclude Include="util.h" />
     <ClInclude Include="hash_table.h" />
     <ClInclude Include="Stack.h" />
+    <ClInclude Include="parse_table.h" />
   </ItemGroup>
 </Project>
