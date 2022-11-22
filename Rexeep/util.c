@@ -78,3 +78,12 @@ char* str_first(char* str) {
     nstr[0] = *str;
     return nstr;
 }
+
+
+char* combine_chars(char* one, char* other) {
+    char* res = calloc(2, sizeof(char));
+
+    res[0] = *one + (*other);
+
+    return res;
+}

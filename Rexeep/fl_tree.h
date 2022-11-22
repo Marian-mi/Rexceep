@@ -38,6 +38,6 @@ void create_fl_tree(fl_tree* tree, char** rules);
 void parse_rule(fl_tree* tree, char* rule);
 int is_terminal(char code);
 
-void get_first_set(fl_tree* tree, char* symbol, List* set);
+void get_first_set(fl_tree* tree, char* symbol, List* set, int* ind);
 
 void ls_compute(fl_tree* tree, char** rules);

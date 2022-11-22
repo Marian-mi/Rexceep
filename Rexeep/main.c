@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include "util.h"
 #include "fl_tree.h"
+#include "parse_table.h"
 
 #include "Stack.h"
 
@@ -11,26 +12,20 @@
 int main() {
 	char* rules[7] = { "S=AkO", "A=aZ", "Z=BX|CX", "C=c", "B=bBC|r", "X=dX|#" };
 
-	fl_tree* tree = fl_instance();
+	hash_table* parse_table = generate_parse_table(rules);
+
+	char* rule = parse_table->get(parse_table, combine_chars("S", "a"));
+
+	printf(rule);
+
+	/*fl_tree* tree = fl_instance();
 	create_fl_tree(tree, rules);
 	ls_compute(tree, rules);
 
-	ls_node* noode = tree->last_table->get(tree->last_table, "X");
+	ls_node* ls = tree->last_table->get(tree->last_table, "X");
 
-	if (LOGF) {
-		List* fss = list_instance();
-		get_first_set(tree, "X", fss);
-
-		for (size_t i = 0; i < fss->count; i++)
-		{
-			printf(fss->tape[i]);
-		}
-
-		return 0;
-	}
-
-	for (size_t i = 0; i < noode->terminals->count; i++)
+	for (size_t i = 0; i < ls->terminals->count; i++)
 	{
-		printf(((char*)noode->terminals->tape[i]));
-	}
+		printf(ls->terminals->tape[i]);
+	}*/
 }

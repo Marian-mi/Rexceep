@@ -5,6 +5,7 @@
 
 static void add_item(hash_table* tbl, unsigned char* name, void* val) {
 	tbl->tape[rcx_hash(name) % tbl->size] = val;
+	tbl->count++;
 }
 
 static void* get_item(hash_table* tbl, unsigned char* name) {
@@ -35,6 +36,7 @@ hash_table* ht_instance() {
 	ins->add = add_item;
 	ins->get = get_item;
 	ins->dispose = dispose;
+	ins->count = 0;
 
 	return ins;
 }

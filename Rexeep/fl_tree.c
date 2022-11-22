@@ -32,7 +32,7 @@ void create_fl_tree(fl_tree* tree, char** rules) {
 	}
 }
 
-void get_first_set(fl_tree* tree, char* symbol, List* set) {
+void get_first_set(fl_tree* tree, char* symbol, List* set, int* ind) {
 	if (is_terminal(*symbol)) {
 		list_add(set, str_first(symbol));
 		return;
@@ -42,6 +42,9 @@ void get_first_set(fl_tree* tree, char* symbol, List* set) {
 
 	for (size_t i = 0; i < node->children_count; i++)
 	{
+		if (ind)
+			if (i != *ind) continue;
+
 		fl_node* child = NULL;
 		int nc_ind = 0;
 		List* ncl_children = ((List*)node->children->tape[i]);
@@ -54,7 +57,7 @@ void get_first_set(fl_tree* tree, char* symbol, List* set) {
 				break;
 			}
 			else if (*str_first(symbol) != child->symbol)
-				get_first_set(tree, &child->symbol, set);
+				get_first_set(tree, &child->symbol, set, NULL);
 
 			nc_ind++;
 		} while (nc_ind < ncl_children->count && child->is_nullable);
@@ -155,7 +158,7 @@ void ls_parse_prod(fl_tree* tree, char lhs, char* prod) {
 		{
 			fl_node* node = fl_get_or_create_node(tree, str_first(&symbol));
 			List* first_list = list_instance();
-			get_first_set(tree, str_first(&symbol), first_list);
+			get_first_set(tree, str_first(&symbol), first_list, NULL);
 
 			for (size_t i = nt_stack->rear; i < nt_stack->front; i++)
 			{

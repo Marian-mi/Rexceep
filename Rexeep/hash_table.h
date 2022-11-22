@@ -11,6 +11,7 @@ struct hash_table_ {
 	ht_add_item add;
 	ht_get_item get;
 	ht_free dispose;
+	int count;
 };
 
 hash_table* ht_instance();

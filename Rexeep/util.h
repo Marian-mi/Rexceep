@@ -21,3 +21,4 @@ void list_add(List* self, void* val);
 void list_dispose(List* self);
 
 char* str_first(char* str);
+char* combine_chars(char* one, char* other);
