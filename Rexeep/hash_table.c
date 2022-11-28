@@ -2,6 +2,7 @@
 
 #include "hash_table.h"
 #include "util.h"
+#include <stdio.h>
 
 static void add_item(hash_table* tbl, unsigned char* name, void* val) {
 	tbl->tape[rcx_hash(name) % tbl->size] = val;
@@ -9,6 +10,10 @@ static void add_item(hash_table* tbl, unsigned char* name, void* val) {
 }
 
 static void* get_item(hash_table* tbl, unsigned char* name) {
+	printf(name);
+	printf("  ");
+	printf("%d",rcx_hash(name) % tbl->size);
+	printf("\r\n");
 	return (tbl->tape[rcx_hash(name) % tbl->size]);
 }
 

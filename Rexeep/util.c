@@ -1,13 +1,15 @@
 #include "util.h"
+#include <string.h>
+#include <stdio.h>
 
 unsigned long
 rcx_hash(unsigned char* str)
 {
-    unsigned long hash = 5381;
+    unsigned long hash = 0;
     int c;
 
     while (c = *str++)
-        hash = ((hash << 5) + hash) + c;
+        hash = c + (hash << 6) + (hash << 16) - hash;
 
     return hash;
 }
@@ -81,9 +83,11 @@ char* str_first(char* str) {
 
 
 char* combine_chars(char* one, char* other) {
-    char* res = calloc(2, sizeof(char));
+    char* res = calloc(3, sizeof(char));
 
-    res[0] = *one + (*other);
+    res[0] = (char)*one;
+    res[1] = (char)*other;
+    res[1] = (char)0;
 
     return res;
 }

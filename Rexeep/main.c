@@ -14,11 +14,11 @@ int main() {
 
 	hash_table* parse_table = generate_parse_table(rules);
 
-	char* rule = parse_table->get(parse_table, combine_chars("S", "a"));
+	char* rule = parse_table->get(parse_table, combine_chars("A", "a"));
 
 	printf(rule);
 
-	/*fl_tree* tree = fl_instance();
+	/*fl_tree"*",tree,= fl_instance();
 	create_fl_tree(tree, rules);
 	ls_compute(tree, rules);
 

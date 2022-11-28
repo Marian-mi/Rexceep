@@ -1,6 +1,9 @@
 #include "parse_table.h"
 #include "util.h"
 #include "fl_tree.h"
+#include <string.h>
+
+char* get_prod(char* rule);
 
 hash_table* generate_parse_table(char** rules) {
 	fl_tree* tree = fl_instance();
@@ -25,7 +28,7 @@ hash_table* generate_parse_table(char** rules) {
 				char* element = first_set->tape[fs_ind];
 
 				if (is_terminal(element))
-					parse_table->add(parse_table, combine_chars(left_hand, element), rule);
+					parse_table->add(parse_table, combine_chars(left_hand, element), get_prod(rule));
 				else if (*element == '#') {
 					List* follow_set = ((ls_node*)tree->last_table->get(tree->last_table, left_hand))->terminals;
 
@@ -33,9 +36,9 @@ hash_table* generate_parse_table(char** rules) {
 					{
 						char* ls_el = (char*)follow_set->tape[ls_ind];
 						if (*ls_el == '$')
-							parse_table->add(parse_table, combine_chars(left_hand, "$"), rule);
+							parse_table->add(parse_table, combine_chars(left_hand, "$"), get_prod(rule));
 						else
-							parse_table->add(parse_table, combine_chars(left_hand, ls_el), "#");
+				 			parse_table->add(parse_table, combine_chars(left_hand, ls_el), "#");
 					}
 				}
 			}
@@ -43,4 +46,21 @@ hash_table* generate_parse_table(char** rules) {
 	}
 
 	return parse_table;
+}
+
+char* get_prod(char* rule) {
+	char* prod = calloc(strlen(rule), sizeof(char));
+
+	if (prod == NULL) return;
+
+	char rule_c;
+	int ind = 0;
+	while (rule_c = *rule++)
+	{
+		if (rule_c == '|') break;
+		prod[ind] = rule_c;
+		ind++;
+	}
+	prod[ind++] = (char)0;
+	return prod;
 }
