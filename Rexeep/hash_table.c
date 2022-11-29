@@ -3,18 +3,43 @@
 #include "hash_table.h"
 #include "util.h"
 #include <stdio.h>
+#include <string.h>
 
 static void add_item(hash_table* tbl, unsigned char* name, void* val) {
-	tbl->tape[rcx_hash(name) % tbl->size] = val;
+	ht_node* nodePtr = malloc(sizeof(ht_node*));
+	ht_node node = { .name = name, .body = val, .next = NULL };
+	nodePtr = &node;
+
+	int ind = rcx_hash(name) % tbl->size;
+
+	if (tbl->tape[ind] == 0) {
+		tbl->tape[ind] = nodePtr;
+		tbl->count++;
+
+		return;
+	}
+
+	ht_node* curr = (ht_node*)tbl->tape[ind];
+
+	while (curr->next != NULL)
+	{
+		curr = (ht_node*)curr->next;
+	}
+
+	curr->next = nodePtr;
 	tbl->count++;
+
+	return;
 }
 
 static void* get_item(hash_table* tbl, unsigned char* name) {
-	printf(name);
-	printf("  ");
-	printf("%d",rcx_hash(name) % tbl->size);
-	printf("\r\n");
-	return (tbl->tape[rcx_hash(name) % tbl->size]);
+	ht_node* current = tbl->tape[rcx_hash(name) % tbl->size];
+
+	while (strcmp(name, current->name) != 0 && current->next != NULL) {
+		current = current->next;
+	}
+
+	return current->body;
 }
 
 static void* get_or_add(hash_table* tbl, unsigned char* name, void* val) {
@@ -22,7 +47,7 @@ static void* get_or_add(hash_table* tbl, unsigned char* name, void* val) {
 
 	if (nodeVal)
 		add_item(tbl, name, val);
-	
+
 	return nodeVal;
 }
 
@@ -36,7 +61,7 @@ hash_table* ht_instance() {
 
 	if (!ins) return NULL;
 
-	ins->tape = calloc(30, sizeof(void*));
+	ins->tape = calloc(30, sizeof(ht_node*));
 	ins->size = 30;
 	ins->add = add_item;
 	ins->get = get_item;
