@@ -1,6 +1,8 @@
 #pragma once
 
-#include "hash_table.h"
+#include <string.h>
+
+#include "fl_tree.h"
 
 
-hash_table* generate_parse_table(char** rules);
+hash_table* generate_parse_table(char** rules,fl_tree* tree);

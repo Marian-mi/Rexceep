@@ -1,5 +1,6 @@
 #pragma once
 
+
 typedef struct hash_table_ hash_table;
 typedef struct ht_node_ ht_node;
 typedef void (*ht_add_item)(hash_table* tbl, unsigned char* name, void* val);

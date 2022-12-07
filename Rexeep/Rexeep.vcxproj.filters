@@ -7,6 +7,9 @@
     <ClCompile Include="util.c" />
     <ClCompile Include="Stack.c" />
     <ClCompile Include="parse_table.c" />
+    <ClCompile Include="Test\t_parse_table.c">
+      <Filter>Test</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="fl_tree.h" />
@@ -14,5 +17,13 @@
     <ClInclude Include="hash_table.h" />
     <ClInclude Include="Stack.h" />
     <ClInclude Include="parse_table.h" />
+    <ClInclude Include="Test\t_parse_table.h">
+      <Filter>Test</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Test">
+      <UniqueIdentifier>{e22ef2a2-9ba0-4006-8568-e01be6d47c7d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
 </Project>

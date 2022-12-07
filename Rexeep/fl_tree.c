@@ -2,7 +2,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include "fl_tree.h"
-#include "Stack.h"
 
 
 void ls_parse_rule(fl_tree* tree, char* rule);

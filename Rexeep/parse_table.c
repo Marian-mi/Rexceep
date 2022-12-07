@@ -1,23 +1,22 @@
+
 #include "parse_table.h"
-#include "util.h"
-#include "fl_tree.h"
-#include <string.h>
 
 char* get_prod(char* rule);
+void inc_rule_to_next_prod(char** rule);
 
-hash_table* generate_parse_table(char** rules) {
-	fl_tree* tree = fl_instance();
+hash_table* generate_parse_table(char** rules, fl_tree* tree) {
 	create_fl_tree(tree, rules);
 	ls_compute(tree, rules);
 
 	hash_table* parse_table = ht_instance();
 
-	char* rule;
+	char* rule = malloc(sizeof(char*));
 	while (rule = *(rules++)) {
 		char* left_hand = str_first(rule);
 		rule += 2;
 
 		fl_node* node = tree->node_ref_table->get(tree->node_ref_table, str_first(left_hand));
+
 
 		for (size_t ncl_ind = 0; ncl_ind < node->children_count; ncl_ind++)
 		{
@@ -27,9 +26,7 @@ hash_table* generate_parse_table(char** rules) {
 			{
 				char* element = first_set->tape[fs_ind];
 
-				if (is_terminal(element))
-					parse_table->add(parse_table, combine_chars(left_hand, element), get_prod(rule));
-				else if (*element == '#') {
+				if (*element == '#') {
 					List* follow_set = ((ls_node*)tree->last_table->get(tree->last_table, left_hand))->terminals;
 
 					for (size_t ls_ind = 0; ls_ind < follow_set->count; ls_ind++)
@@ -41,7 +38,11 @@ hash_table* generate_parse_table(char** rules) {
 				 			parse_table->add(parse_table, combine_chars(left_hand, ls_el), "#");
 					}
 				}
+				else if (is_terminal(element))
+					parse_table->add(parse_table, combine_chars(left_hand, element), get_prod(rule));
 			}
+
+			inc_rule_to_next_prod(&rule);
 		}
 	}
 
@@ -63,4 +64,13 @@ char* get_prod(char* rule) {
 	}
 	prod[ind++] = (char)0;
 	return prod;
+}
+
+void inc_rule_to_next_prod(char** rule) {
+	char rule_c;
+	while (rule_c = **rule)
+	{
+		*rule += 1;
+		if (rule_c == '|') break;
+	}
 }

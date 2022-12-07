@@ -1,14 +1,15 @@
 #include <stdlib.h>
 
 #include "hash_table.h"
-#include "util.h"
 #include <stdio.h>
 #include <string.h>
 
 static void add_item(hash_table* tbl, unsigned char* name, void* val) {
 	ht_node* nodePtr = malloc(sizeof(ht_node*));
-	ht_node node = { .name = name, .body = val, .next = NULL };
-	nodePtr = &node;
+
+	nodePtr->body = val;
+	nodePtr->name = name;
+	nodePtr->next = NULL;
 
 	int ind = rcx_hash(name) % tbl->size;
 
@@ -33,7 +34,9 @@ static void add_item(hash_table* tbl, unsigned char* name, void* val) {
 }
 
 static void* get_item(hash_table* tbl, unsigned char* name) {
-	ht_node* current = tbl->tape[rcx_hash(name) % tbl->size];
+	ht_node* current = (ht_node*)tbl->tape[rcx_hash(name) % tbl->size];
+
+	if (current == NULL) return NULL;
 
 	while (strcmp(name, current->name) != 0 && current->next != NULL) {
 		current = current->next;
