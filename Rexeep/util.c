@@ -6,12 +6,8 @@ rcx_hash(unsigned char* str)
     unsigned long hash = 0;
     int c;
     
-    //printf("entry: %s", str);
-
     while (c = *str++)
         hash = c + (hash << 6) + (hash << 16) - hash;
-
-    //printf(" hash: %d\r\n", hash);
 
     return hash;
 }

@@ -17,7 +17,6 @@ hash_table* generate_parse_table(char** rules, fl_tree* tree) {
 
 		fl_node* node = tree->node_ref_table->get(tree->node_ref_table, str_first(left_hand));
 
-
 		for (size_t ncl_ind = 0; ncl_ind < node->children_count; ncl_ind++)
 		{
 			List* first_set = list_instance();
