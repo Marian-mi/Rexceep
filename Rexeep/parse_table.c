@@ -22,9 +22,10 @@ hash_table* generate_parse_table(char** rules, fl_tree* tree) {
 		{
 			List* first_set = list_instance();
 			get_first_set(tree, left_hand, first_set, &ncl_ind);
+
 			for (size_t fs_ind = 0; fs_ind < first_set->count; fs_ind++)
 			{
-				char* element = first_set->tape[fs_ind];
+				char* element = (char*)first_set->tape[fs_ind];
 
 				if (*element == '#') {
 					List* follow_set = ((ls_node*)tree->last_table->get(tree->last_table, left_hand))->terminals;
@@ -38,8 +39,10 @@ hash_table* generate_parse_table(char** rules, fl_tree* tree) {
 				 			parse_table->add(parse_table, combine_chars(left_hand, ls_el), "#");
 					}
 				}
-				else if (is_terminal(element))
+				else if (is_terminal(*element)) {
+					
 					parse_table->add(parse_table, combine_chars(left_hand, element), get_prod(rule));
+				}
 			}
 
 			inc_rule_to_next_prod(&rule);
