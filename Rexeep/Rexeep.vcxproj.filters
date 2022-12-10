@@ -5,21 +5,23 @@
     <ClCompile Include="fl_tree.c" />
     <ClCompile Include="hash_table.c" />
     <ClCompile Include="util.c" />
-    <ClCompile Include="Stack.c" />
+    <ClCompile Include="stack.c" />
     <ClCompile Include="parse_table.c" />
     <ClCompile Include="Test\t_parse_table.c">
       <Filter>Test</Filter>
     </ClCompile>
+    <ClCompile Include="parse.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="fl_tree.h" />
     <ClInclude Include="util.h" />
     <ClInclude Include="hash_table.h" />
-    <ClInclude Include="Stack.h" />
+    <ClInclude Include="stack.h" />
     <ClInclude Include="parse_table.h" />
     <ClInclude Include="Test\t_parse_table.h">
       <Filter>Test</Filter>
     </ClInclude>
+    <ClInclude Include="parse.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Test">

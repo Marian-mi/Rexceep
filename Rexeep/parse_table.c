@@ -1,4 +1,3 @@
-
 #include "parse_table.h"
 
 char* get_prod(char* rule);

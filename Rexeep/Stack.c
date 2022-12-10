@@ -1,4 +1,4 @@
-#include "Stack.h"
+#include "stack.h"
 #include <stdlib.h>
 
 string_stack* ss_instance()
